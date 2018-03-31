@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">exercise-template</string>
+    <string name="title_placeholder">Bloodborne</string>
+    <string name="small_info_ingredient">Ingredients : %1$d</string>
+    <string name="small_info_serving">Servings : %1$d</string>
+    <string name="small_info_step">Steps : %1$d</string>
+</resources>
