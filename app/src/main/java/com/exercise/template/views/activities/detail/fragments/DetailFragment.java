@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import com.exercise.template.R;
 import com.exercise.template.adapters.IngredientAdapter;
 import com.exercise.template.adapters.StepAdapter;
 import com.exercise.template.api.models.Step;
+import com.exercise.template.views.activities.detail.DetailActivity;
 import com.exercise.template.views.activities.detail.viewmodels.DetailViewModel;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseFragment;
@@ -78,11 +80,16 @@ public class DetailFragment extends BaseFragment {
             if(recipe != null) {
                 ingredientAdapter.setData(recipe.getIngredients());
                 stepAdapter.setData(recipe.getSteps());
+
+                //SET DEFAULT
+                if(!recipe.getSteps().isEmpty())
+                detailViewModel.getSelectedStep().setValue(recipe.getSteps().get(0));
             }
         });
 
         stepAdapter.setStepListener(step -> {
             detailViewModel.getSelectedStep().setValue(step);
+            ((DetailActivity) getActivity()).gotoTheater();
         });
 
         rvIngredient.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
