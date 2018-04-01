@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Baking App</string>
     <string name="title_placeholder">Bloodborne</string>
+    <string name="no_vid">There is no video</string>
     <string name="title_ingredient">Ingredients</string>
     <string name="title_desc">Step Description</string>
     <string name="title_step">Steps</string>

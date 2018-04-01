@@ -26,6 +26,7 @@ public class DetailActivity extends BaseActivity {
 
         detailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
         detailViewModel.getRecipe().setValue((Recipe) getIntent().getSerializableExtra(Constants.INTENT_RECIPE_DETAIL));
+        detailViewModel.getIsTablet().setValue(isTablet);
 
         addFragment(R.id.container_main, DetailFragment.newInstance());
 

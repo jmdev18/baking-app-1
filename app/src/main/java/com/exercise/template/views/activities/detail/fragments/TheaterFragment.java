@@ -6,30 +6,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.exercise.template.R;
 import com.exercise.template.views.activities.detail.viewmodels.DetailViewModel;
 import com.exercise.template.views.base.BaseFragment;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -41,7 +34,6 @@ import com.google.android.exoplayer2.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * File Created by pandu on 01/04/18.
@@ -56,6 +48,12 @@ public class TheaterFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.video_player)
     SimpleExoPlayerView videoPlayer;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.video_player_empty)
+    RelativeLayout videoPlayerEmpty;
     private SimpleExoPlayer simpleExoPlayer;
 
     public static TheaterFragment newInstance() {
@@ -91,11 +89,26 @@ public class TheaterFragment extends BaseFragment {
 
         detailViewModel = ViewModelProviders.of(getActivity()).get(DetailViewModel.class);
 
+        detailViewModel.getIsTablet().observe(this, isTablet -> {
+            if (isTablet != null && !isTablet) {
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+                toolbar.setNavigationOnClickListener(v -> {
+                    getActivity().onBackPressed();
+                });
+            }
+        });
+
         detailViewModel.getSelectedStep().observe(this, step -> {
             if (step != null) {
+                simpleExoPlayer.stop();
+
+                tvTitle.setText(step.getShortDescription());
                 tvDesc.setText(step.getDescription());
 
-                if(!step.getVideoURL().isEmpty()) {
+                if (!step.getVideoURL().isEmpty()) {
+                    videoPlayer.setVisibility(View.VISIBLE);
+                    videoPlayerEmpty.setVisibility(View.INVISIBLE);
+
                     Uri uri = Uri.parse(step.getVideoURL());
                     DataSource.Factory dataSourceFactory =
                             new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(),
@@ -106,6 +119,10 @@ public class TheaterFragment extends BaseFragment {
 
                     simpleExoPlayer.setPlayWhenReady(true);
                     simpleExoPlayer.prepare(mediaSource);
+                }
+                else{
+                    videoPlayer.setVisibility(View.GONE);
+                    videoPlayerEmpty.setVisibility(View.VISIBLE);
                 }
             }
         });

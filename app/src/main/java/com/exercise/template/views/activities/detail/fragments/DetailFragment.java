@@ -75,9 +75,16 @@ public class DetailFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
+
         detailViewModel = ViewModelProviders.of(getActivity()).get(DetailViewModel.class);
         detailViewModel.getRecipe().observe(getActivity(), recipe -> {
             if(recipe != null) {
+                toolbar.setTitle(recipe.getName());
+
                 ingredientAdapter.setData(recipe.getIngredients());
                 stepAdapter.setData(recipe.getSteps());
 
