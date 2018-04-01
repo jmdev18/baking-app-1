@@ -18,7 +18,7 @@
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:padding="16dp"
-        android:layout_height="300dp"/>
+        android:layout_height="@dimen/exoplayer_height"/>
 
     <android.support.v7.widget.CardView
         android:layout_below="@id/video_player"
@@ -44,10 +44,11 @@
 
             <TextView
                 android:id="@+id/tv_desc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/title_placeholder"
                 android:layout_marginTop="8dp"
+                android:lineSpacingExtra="8dp"
                 android:layout_below="@id/tv_desc_caption"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>

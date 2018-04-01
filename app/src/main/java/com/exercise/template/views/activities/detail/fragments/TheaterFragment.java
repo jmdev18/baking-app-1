@@ -81,12 +81,10 @@ public class TheaterFragment extends BaseFragment {
 
         Handler mainHandler = new Handler();
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        LoadControl loadControl = new DefaultLoadControl();
 
-        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector, loadControl);
+        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
         videoPlayer.setPlayer(simpleExoPlayer);
         videoPlayer.setUseController(true);
         videoPlayer.requestFocus();
@@ -102,14 +100,23 @@ public class TheaterFragment extends BaseFragment {
                     DataSource.Factory dataSourceFactory =
                             new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(),
                                     "BakingApp"));
-                    MediaSource mediaSource = new ExtractorMediaSource(uri, dataSourceFactory, new DefaultExtractorsFactory(),
-                            mainHandler, null);
+
+                    ExtractorMediaSource.Factory factory = new ExtractorMediaSource.Factory(dataSourceFactory);
+                    MediaSource mediaSource = factory.createMediaSource(uri, mainHandler, null);
 
                     simpleExoPlayer.setPlayWhenReady(true);
                     simpleExoPlayer.prepare(mediaSource);
                 }
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        simpleExoPlayer.stop();
+        simpleExoPlayer.release();
+        simpleExoPlayer = null;
+        super.onPause();
     }
 
     @Override
