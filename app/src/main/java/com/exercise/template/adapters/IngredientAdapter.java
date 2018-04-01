@@ -31,7 +31,6 @@ public class IngredientAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setData(List<Ingredient> data) {
-        this.data.clear();
         this.data = data;
         notifyDataSetChanged();
     }

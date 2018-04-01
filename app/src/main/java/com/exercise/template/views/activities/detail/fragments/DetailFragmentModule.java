@@ -1,9 +1,8 @@
-package com.exercise.template.views.activities.main.fragments;
+package com.exercise.template.views.activities.detail.fragments;
 
 import android.support.v4.app.Fragment;
 
 import com.exercise.template.adapters.IngredientAdapter;
-import com.exercise.template.adapters.MainAdapter;
 import com.exercise.template.adapters.StepAdapter;
 import com.exercise.template.api.AppApi;
 import com.exercise.template.di.scopes.PerFragment;

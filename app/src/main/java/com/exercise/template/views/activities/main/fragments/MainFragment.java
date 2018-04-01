@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.exercise.template.R;
 import com.exercise.template.adapters.MainAdapter;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -40,6 +42,10 @@ public class MainFragment extends BaseFragment {
     MainViewModel.Factory mainViewModelFactory;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.rlProgress)
+    RelativeLayout rlProgress;
+    @BindView(R.id.rlError)
+    RelativeLayout rlError;
 
     private MainViewModel mainViewModel;
 
@@ -69,7 +75,23 @@ public class MainFragment extends BaseFragment {
         mainViewModel = ViewModelProviders.of(getActivity(), mainViewModelFactory)
                 .get(MainViewModel.class);
 
+        mainViewModel.getStatus().observe(this, status -> {
+            assert status != null;
+            switch (status) {
+                case LOADING:
+                    showLoader();
+                    break;
+                case SUCCESS:
+                    hideLoader();
+                    break;
+                case FAILED:
+                    showError();
+                    break;
+            }
+        });
+
         mainViewModel.getNumberOfCols().observe(this, cols -> {
+            if(cols == null) cols = 1;
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), cols));
         });
 
@@ -83,6 +105,25 @@ public class MainFragment extends BaseFragment {
         });
 
         recyclerView.setAdapter(adapter);
+    }
+
+    public void showLoader() {
+        rlProgress.setVisibility(View.VISIBLE);
+        rlError.setVisibility(View.GONE);
+    }
+
+    public void hideLoader() {
+        rlProgress.setVisibility(View.GONE);
+    }
+
+    public void showError() {
+        rlProgress.setVisibility(View.GONE);
+        rlError.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.btn_try_again)
+    public void tryAgain(){
+        mainViewModel.fetchRecipes();
     }
 
     @Override

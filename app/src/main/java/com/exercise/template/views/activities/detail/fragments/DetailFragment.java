@@ -1,4 +1,4 @@
-package com.exercise.template.views.activities.main.fragments;
+package com.exercise.template.views.activities.detail.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import com.exercise.template.R;
 import com.exercise.template.adapters.IngredientAdapter;
 import com.exercise.template.adapters.StepAdapter;
+import com.exercise.template.api.models.Step;
+import com.exercise.template.views.activities.detail.viewmodels.DetailViewModel;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseFragment;
 
@@ -22,6 +24,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * File Created by pandu on 31/03/18.
@@ -29,9 +32,6 @@ import butterknife.Unbinder;
 public class DetailFragment extends BaseFragment {
 
     public static final String TAG = DetailFragment.class.getSimpleName();
-
-    @Inject
-    MainViewModel.Factory mainViewModelFactory;
 
     @Inject
     IngredientAdapter ingredientAdapter;
@@ -44,12 +44,13 @@ public class DetailFragment extends BaseFragment {
 
     @BindView(R.id.rv_step)
     RecyclerView rvStep;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    private MainViewModel mainViewModel;
-
     Unbinder unbinder;
+
+    DetailViewModel detailViewModel;
 
     public static DetailFragment newInstance() {
 
@@ -65,10 +66,6 @@ public class DetailFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(v -> {
-            getActivity().onBackPressed();
-        });
         return view;
     }
 
@@ -76,8 +73,17 @@ public class DetailFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mainViewModel = ViewModelProviders.of(getActivity(), mainViewModelFactory)
-                .get(MainViewModel.class);
+        detailViewModel = ViewModelProviders.of(getActivity()).get(DetailViewModel.class);
+        detailViewModel.getRecipe().observe(getActivity(), recipe -> {
+            if(recipe != null) {
+                ingredientAdapter.setData(recipe.getIngredients());
+                stepAdapter.setData(recipe.getSteps());
+            }
+        });
+
+        stepAdapter.setStepListener(step -> {
+            detailViewModel.getSelectedStep().setValue(step);
+        });
 
         rvIngredient.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rvIngredient.setNestedScrollingEnabled(false);
@@ -86,14 +92,6 @@ public class DetailFragment extends BaseFragment {
 
         rvIngredient.setAdapter(ingredientAdapter);
         rvStep.setAdapter(stepAdapter);
-
-        mainViewModel.getSelectedRecipe().observe(this, recipe -> {
-            if (recipe != null) {
-                toolbar.setTitle(recipe.getName());
-                ingredientAdapter.setData(recipe.getIngredients());
-                stepAdapter.setData(recipe.getSteps());
-            }
-        });
     }
 
     @Override

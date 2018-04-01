@@ -33,7 +33,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setData(List<Recipe> data){
-        this.data.clear();
         this.data = data;
         notifyDataSetChanged();
     }

@@ -1,8 +1,8 @@
 package com.exercise.template.views.activities.main;
 
 import com.exercise.template.di.scopes.PerFragment;
-import com.exercise.template.views.activities.main.fragments.DetailFragment;
-import com.exercise.template.views.activities.main.fragments.DetailFragmentModule;
+import com.exercise.template.views.activities.detail.fragments.DetailFragment;
+import com.exercise.template.views.activities.detail.fragments.DetailFragmentModule;
 import com.exercise.template.views.activities.main.fragments.MainFragment;
 import com.exercise.template.views.activities.main.fragments.MainFragmentModule;
 
@@ -18,8 +18,4 @@ public abstract class MainActivityFragmentBuilder {
     @PerFragment
     @ContributesAndroidInjector(modules = MainFragmentModule.class)
     abstract MainFragment bindMainFragment();
-
-    @PerFragment
-    @ContributesAndroidInjector(modules = DetailFragmentModule.class)
-    abstract DetailFragment bindDetailFragment();
 }

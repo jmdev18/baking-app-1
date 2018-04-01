@@ -6,4 +6,5 @@ package com.exercise.template;
 public interface Constants {
 
     int TIMEOUT_DURATION = 5;
+    String INTENT_RECIPE_DETAIL = "INTENT_RECIPE_DETAIL";
 }

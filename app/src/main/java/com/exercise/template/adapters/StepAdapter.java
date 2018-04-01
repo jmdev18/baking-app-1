@@ -1,11 +1,13 @@
 package com.exercise.template.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.exercise.template.R;
@@ -26,15 +28,24 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Step> data;
 
+    private StepListener stepListener;
+
+    private int selectedPosition = 0;
+
+    private int lastSelectedPosition = 0;
+
     public StepAdapter(Context context) {
         this.context = context;
         data = new ArrayList<>();
     }
 
     public void setData(List<Step> data) {
-        this.data.clear();
         this.data = data;
         notifyDataSetChanged();
+    }
+
+    public void setStepListener(StepListener listener){
+        this.stepListener = listener;
     }
 
     @Override
@@ -57,6 +68,24 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if(!videoURL.isEmpty()) viewHolder.imgPlay.setVisibility(View.VISIBLE);
         else viewHolder.imgPlay.setVisibility(View.GONE);
+
+        viewHolder.rootView.setOnClickListener(view -> {
+            lastSelectedPosition = selectedPosition;
+            stepListener.onStepClick(data.get(position));
+            selectedPosition = position;
+
+            notifyItemChanged(lastSelectedPosition);
+            notifyItemChanged(selectedPosition);
+        });
+
+        if(selectedPosition == position){
+            viewHolder.rootView.setBackgroundColor(ContextCompat
+                    .getColor(context, R.color.selectedColorListItem));
+        }
+        else{
+            viewHolder.rootView.setBackgroundColor(ContextCompat
+                    .getColor(context, R.color.colorListItem));
+        }
     }
 
     @Override
@@ -64,7 +93,10 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return data.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.root_view)
+        RelativeLayout rootView;
 
         @BindView(R.id.tv_title)
         TextView tvTitle;
@@ -75,12 +107,10 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
         }
+    }
 
-        @Override
-        public void onClick(View view) {
-
-        }
+    public interface StepListener {
+        void onStepClick(Step step);
     }
 }

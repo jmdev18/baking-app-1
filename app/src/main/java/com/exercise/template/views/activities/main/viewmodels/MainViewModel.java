@@ -28,7 +28,13 @@ import timber.log.Timber;
 @Getter
 public class MainViewModel extends ViewModel {
 
+    public enum Status {LOADING, SUCCESS, FAILED};
+
     private AppApi appApi;
+
+    private MutableLiveData<Status> status = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isTablet = new MutableLiveData<>();
 
     private MutableLiveData<List<Recipe>> recipes = new MutableLiveData<>();
 
@@ -43,11 +49,15 @@ public class MainViewModel extends ViewModel {
     }
 
     public void fetchRecipes(){
+        status.setValue(Status.LOADING);
         Disposable subscribe = appApi.getRecipes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ingredients -> {
+                    status.setValue(Status.SUCCESS);
                     recipes.setValue(ingredients);
+                }, throwable -> {
+                    status.setValue(Status.FAILED);
                 });
 
         disposables.add(subscribe);

@@ -6,4 +6,5 @@
     <color name="colorBackground">#e1dacd</color>
     <color name="colorListInfoItem">#eae4d6</color>
     <color name="colorListItem">#dacbaf</color>
+    <color name="selectedColorListItem">#c2ab80</color>
 </resources>

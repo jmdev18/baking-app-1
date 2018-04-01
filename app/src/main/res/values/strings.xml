@@ -1,11 +1,16 @@
 <resources>
-    <string name="app_name">exercise-template</string>
+    <string name="app_name">Baking App</string>
     <string name="title_placeholder">Bloodborne</string>
     <string name="title_ingredient">Ingredients</string>
+    <string name="title_desc">Step Description</string>
     <string name="title_step">Steps</string>
     <string name="small_info_ingredient">Ingredients : %1$d</string>
     <string name="small_info_serving">Servings : %1$d</string>
     <string name="small_info_step">Steps : %1$d</string>
     <string name="info_ingredient">&#8226; %1$s (%2$.1f %3$s)</string>
     <string name="info_short_step_desc">%1$d. %2$s</string>
+    <string name="loading">Loading data…</string>
+    <string name="error_caption">Oopss!</string>
+    <string name="error_title">Something weird happened!</string>
+    <string name="try_again">Try Again</string>
 </resources>

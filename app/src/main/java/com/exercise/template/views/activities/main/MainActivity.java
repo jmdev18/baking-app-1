@@ -1,26 +1,28 @@
 package com.exercise.template.views.activities.main;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.widget.FrameLayout;
 
+import com.exercise.template.Constants;
 import com.exercise.template.R;
-import com.exercise.template.api.AppApi;
-import com.exercise.template.views.activities.main.fragments.DetailFragment;
+import com.exercise.template.views.activities.detail.DetailActivity;
+import com.exercise.template.views.activities.detail.fragments.DetailFragment;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseActivity;
 import com.exercise.template.views.activities.main.fragments.MainFragment;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends BaseActivity {
 
     @Inject
     MainViewModel.Factory mainViewModelFactory;
+    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,29 +30,24 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        MainViewModel mainViewModel = ViewModelProviders.of(this, mainViewModelFactory)
+        mainViewModel = ViewModelProviders.of(this, mainViewModelFactory)
                 .get(MainViewModel.class);
 
-        mainViewModel.getNumberOfCols().setValue(numberOfColumns());
-
         addFragment(R.id.container_main, MainFragment.newInstance());
-
-        if(findViewById(R.id.ll_container) != null){
-            addFragment(R.id.container_detail, DetailFragment.newInstance());
-        }
+        mainViewModel.getNumberOfCols().setValue(numberOfColumns());
     }
 
     public void gotoDetail(){
-        if(findViewById(R.id.ll_container) == null) {
-            addFragment(R.id.container_main, DetailFragment.newInstance());
-        }
+        Intent i = new Intent(this, DetailActivity.class);
+        i.putExtra(Constants.INTENT_RECIPE_DETAIL, mainViewModel.getSelectedRecipe().getValue());
+        startActivity(i);
     }
 
     private int numberOfColumns() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        if(findViewById(R.id.ll_container) == null && getWindowManager() != null) {
+        if(getWindowManager() != null) {
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            int widthDivider = 400;
+            int widthDivider = 600;
             int width = displayMetrics.widthPixels;
             int nColumns = width / widthDivider;
             if (nColumns < 3) return 1;
@@ -58,15 +55,5 @@ public class MainActivity extends BaseActivity {
         }
 
         return 1;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() < 2) {
-            finish();
-        }
-        else{
-            super.onBackPressed();
-        }
     }
 }
