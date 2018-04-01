@@ -4,27 +4,24 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.exercise.template.R;
 import com.exercise.template.adapters.MainAdapter;
-import com.exercise.template.api.models.Recipe;
 import com.exercise.template.views.activities.main.MainActivity;
-import com.exercise.template.views.base.BaseFragment;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
+import com.exercise.template.views.base.BaseFragment;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 /**
  * File Created by pandu on 31/03/18.
@@ -41,6 +38,8 @@ public class MainFragment extends BaseFragment {
 
     @Inject
     MainViewModel.Factory mainViewModelFactory;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private MainViewModel mainViewModel;
 
@@ -58,6 +57,8 @@ public class MainFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        toolbar.setTitle("Baking App");
         return view;
     }
 

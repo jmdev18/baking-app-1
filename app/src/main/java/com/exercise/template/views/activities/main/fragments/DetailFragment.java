@@ -4,12 +4,16 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.exercise.template.R;
+import com.exercise.template.adapters.IngredientAdapter;
+import com.exercise.template.adapters.StepAdapter;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseFragment;
 
@@ -28,11 +32,24 @@ public class DetailFragment extends BaseFragment {
 
     @Inject
     MainViewModel.Factory mainViewModelFactory;
-    @BindView(R.id.tv_title)
-    TextView tvTitle;
-    Unbinder unbinder;
+
+    @Inject
+    IngredientAdapter ingredientAdapter;
+
+    @Inject
+    StepAdapter stepAdapter;
+
+    @BindView(R.id.rv_ingredient)
+    RecyclerView rvIngredient;
+
+    @BindView(R.id.rv_step)
+    RecyclerView rvStep;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private MainViewModel mainViewModel;
+
+    Unbinder unbinder;
 
     public static DetailFragment newInstance() {
 
@@ -48,18 +65,33 @@ public class DetailFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(v -> {
+            getActivity().onBackPressed();
+        });
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mainViewModel = ViewModelProviders.of(getActivity(), mainViewModelFactory)
                 .get(MainViewModel.class);
 
+        rvIngredient.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvIngredient.setNestedScrollingEnabled(false);
+        rvStep.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvStep.setNestedScrollingEnabled(false);
+
+        rvIngredient.setAdapter(ingredientAdapter);
+        rvStep.setAdapter(stepAdapter);
+
         mainViewModel.getSelectedRecipe().observe(this, recipe -> {
-            if(recipe != null) {
-                tvTitle.setText(recipe.getName());
+            if (recipe != null) {
+                toolbar.setTitle(recipe.getName());
+                ingredientAdapter.setData(recipe.getIngredients());
+                stepAdapter.setData(recipe.getSteps());
             }
         });
     }

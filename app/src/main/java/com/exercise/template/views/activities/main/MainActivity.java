@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
 
     public void gotoDetail(){
         if(findViewById(R.id.ll_container) == null) {
-            addFragment(R.id.container, DetailFragment.newInstance());
+            addFragment(R.id.container_main, DetailFragment.newInstance());
         }
     }
 
@@ -58,5 +58,15 @@ public class MainActivity extends BaseActivity {
         }
 
         return 1;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().getBackStackEntryCount() < 2) {
+            finish();
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }

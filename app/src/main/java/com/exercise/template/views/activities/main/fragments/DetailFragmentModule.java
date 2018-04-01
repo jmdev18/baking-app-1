@@ -2,7 +2,9 @@ package com.exercise.template.views.activities.main.fragments;
 
 import android.support.v4.app.Fragment;
 
+import com.exercise.template.adapters.IngredientAdapter;
 import com.exercise.template.adapters.MainAdapter;
+import com.exercise.template.adapters.StepAdapter;
 import com.exercise.template.api.AppApi;
 import com.exercise.template.di.scopes.PerFragment;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
@@ -20,6 +22,18 @@ public abstract class DetailFragmentModule {
     @Binds
     @PerFragment
     abstract Fragment bindsDetailFragment(DetailFragment fragment);
+
+    @Provides
+    @PerFragment
+    static IngredientAdapter providesIngredientAdapter(DetailFragment fragment){
+        return new IngredientAdapter(fragment.getContext());
+    }
+
+    @Provides
+    @PerFragment
+    static StepAdapter providesStepAdapter(DetailFragment fragment){
+        return new StepAdapter(fragment.getContext());
+    }
 
     @Provides
     @PerFragment
