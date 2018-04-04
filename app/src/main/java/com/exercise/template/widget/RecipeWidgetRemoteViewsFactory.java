@@ -10,6 +10,7 @@ import android.widget.RemoteViewsService;
 import com.exercise.template.Constants;
 import com.exercise.template.R;
 import com.exercise.template.db.RecipeContract;
+import com.exercise.template.db.RecipeProvider;
 
 /**
  * File Created by pandu on 03/04/18.
@@ -32,7 +33,16 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     public void onDataSetChanged() {
         if(cursor != null) cursor.close();
 
-        long l = Binder.clearCallingIdentity();
+        long token = Binder.clearCallingIdentity();
+        cursor = context.getContentResolver()
+                .query(RecipeProvider.Recipes.CONTENT_URI,
+                        RecipeContract.PROJECTION,
+                        null,
+                        null,
+                        null
+                );
+
+        Binder.restoreCallingIdentity(token);
     }
 
     @Override
