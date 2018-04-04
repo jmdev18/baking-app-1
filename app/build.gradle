@@ -36,6 +36,9 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.0"
     annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
 
+    annotationProcessor "net.simonvt.schematic:schematic-compiler:$schematicVersion"
+    compile "net.simonvt.schematic:schematic:$schematicVersion"
+
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

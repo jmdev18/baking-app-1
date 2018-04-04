@@ -26,6 +26,7 @@ ext{
     lombokVersion       = "1.16.20"
     timberVersion       = "4.6.1"
     butterKnifeVersion  = "8.8.1"
+    schematicVersion    = "0.7.0"
 }
 
 allprojects {
