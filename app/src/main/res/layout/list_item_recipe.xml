@@ -34,7 +34,6 @@
                 android:layout_marginStart="3dp"
                 />
 
-
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -45,12 +44,12 @@
 
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_below="@id/rl1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp"
+            android:padding="8dp"
             android:background="@color/colorListInfoItem">
 
             <TextView
@@ -65,15 +64,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="@string/title_placeholder"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:layout_toRightOf="@id/tv_ingredient"
+                android:layout_toEndOf="@id/tv_ingredient"
+                />
 
             <TextView
                 android:id="@+id/tv_serving"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="@string/title_placeholder"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:layout_below="@id/tv_ingredient"/>
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32sp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_favorite_border"/>
+        </RelativeLayout>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
