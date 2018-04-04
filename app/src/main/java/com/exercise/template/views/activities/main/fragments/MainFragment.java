@@ -1,9 +1,16 @@
 package com.exercise.template.views.activities.main.fragments;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +21,16 @@ import android.widget.RelativeLayout;
 
 import com.exercise.template.R;
 import com.exercise.template.adapters.MainAdapter;
+import com.exercise.template.api.models.Recipe;
+import com.exercise.template.db.RecipeContract;
+import com.exercise.template.db.RecipeProvider;
 import com.exercise.template.views.activities.main.MainActivity;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseFragment;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,11 +38,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * File Created by pandu on 31/03/18.
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = MainFragment.class.getSimpleName();
 
@@ -40,16 +55,21 @@ public class MainFragment extends BaseFragment {
 
     @Inject
     MainViewModel.Factory mainViewModelFactory;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.rlProgress)
     RelativeLayout rlProgress;
+
     @BindView(R.id.rlError)
     RelativeLayout rlError;
 
     private MainViewModel mainViewModel;
 
     Unbinder unbinder;
+
+    private static final int LOADER_ID_RECIPES = 9090;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -97,6 +117,7 @@ public class MainFragment extends BaseFragment {
 
         mainViewModel.getRecipes().observe(this, recipes -> {
             adapter.setData(recipes);
+            insertRecipes(recipes);
         });
 
         adapter.setRecipeListener(selectedRecipe -> {
@@ -105,6 +126,37 @@ public class MainFragment extends BaseFragment {
         });
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private void insertRecipes(List<Recipe> data){
+        @SuppressLint("StaticFieldLeak")
+        AsyncTask<Void, Void, Void> insertRecipes = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Gson gson = new Gson();
+                ContentValues[] recipes = new ContentValues[data.size()];
+
+                for (int i = 0; i < data.size(); i++) {
+                    ContentValues recipe = new ContentValues();
+                    Recipe r = data.get(i);
+                    recipe.put(RecipeContract.COLUMN_NAME, r.getName());
+                    recipe.put(RecipeContract.COLUMN_IMAGE, r.getImage());
+                    recipe.put(RecipeContract.COLUMN_SERVINGS, r.getServings());
+                    recipe.put(RecipeContract.COLUMN_INGREDIENTS, gson.toJson(r.getIngredients()));
+                    recipe.put(RecipeContract.COLUMN_STEPS, gson.toJson(r.getSteps()));
+                    recipe.put(RecipeContract.COLUMN_INGREDIENTS_SIZE, r.getIngredients().size());
+                    recipe.put(RecipeContract.COLUMN_STEPS_SIZE, r.getSteps().size());
+
+                    recipes[i] = recipe;
+                }
+
+                getActivity().getContentResolver()
+                        .bulkInsert(RecipeProvider.Recipes.CONTENT_URI, recipes);
+                return null;
+            }
+        };
+
+        insertRecipes.execute();
     }
 
     public void showLoader() {
@@ -130,7 +182,37 @@ public class MainFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        mainViewModel.fetchRecipes();
+
+        getActivity()
+                .getSupportLoaderManager()
+                .initLoader(LOADER_ID_RECIPES, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                getContext(),
+                RecipeProvider.Recipes.CONTENT_URI,
+                RecipeContract.PROJECTION,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data.getCount() > 0) {
+            adapter.setCursor(data);
+        }
+        else{
+            mainViewModel.fetchRecipes();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     @Override
