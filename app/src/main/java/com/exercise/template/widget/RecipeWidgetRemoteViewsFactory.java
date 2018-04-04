@@ -15,12 +15,12 @@ import com.exercise.template.db.RecipeProvider;
 /**
  * File Created by pandu on 03/04/18.
  */
-public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
+public class RecipeWidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     private Context context;
     private Cursor cursor;
 
-    public WidgetRemoteViewsFactory(Context context) {
+    public RecipeWidgetRemoteViewsFactory(Context context) {
         this.context = context;
     }
 
