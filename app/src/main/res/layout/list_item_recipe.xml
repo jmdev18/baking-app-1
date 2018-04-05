@@ -78,8 +78,10 @@
                 android:layout_below="@id/tv_ingredient"/>
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32sp"
+                android:id="@+id/iv_favourite"
+                android:layout_width="48dp"
+                android:layout_height="48sp"
+                android:padding="8dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
