@@ -115,14 +115,36 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), cols));
         });
 
-        mainViewModel.getRecipes().observe(this, recipes -> {
-            adapter.setData(recipes);
-            insertRecipes(recipes);
-        });
+        //adapter.setData(recipes);
+        mainViewModel.getRecipes().observe(this, this::insertRecipes);
 
-        adapter.setRecipeListener(selectedRecipe -> {
-            mainViewModel.getSelectedRecipe().setValue(selectedRecipe);
-            ((MainActivity) getActivity()).gotoDetail();
+        adapter.setRecipeListener(new MainAdapter.RecipeListener() {
+            @Override
+            public void onRecipeClick(Recipe selectedRecipe) {
+                mainViewModel.getSelectedRecipe().setValue(selectedRecipe);
+                ((MainActivity) getActivity()).gotoDetail();
+            }
+
+            @Override
+            public void onFavouriteClick(String recipeId) {
+                ContentValues values = new ContentValues();
+                values.put(RecipeContract.COLUMN_DESIRED, 0);
+                getActivity().getContentResolver().update(
+                        RecipeProvider.Recipes.CONTENT_URI,
+                        values,
+                        null,
+                        null
+                );
+
+                values = new ContentValues();
+                values.put(RecipeContract.COLUMN_DESIRED, 1);
+                getActivity().getContentResolver().update(
+                        RecipeProvider.Recipes.CONTENT_URI_WITH_ID(recipeId),
+                        values,
+                        null,
+                        null
+                );
+            }
         });
 
         recyclerView.setAdapter(adapter);
@@ -139,6 +161,8 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
                 for (int i = 0; i < data.size(); i++) {
                     ContentValues recipe = new ContentValues();
                     Recipe r = data.get(i);
+
+                    recipe.put(RecipeContract.COLUMN_RECIPE_ID, r.getId());
                     recipe.put(RecipeContract.COLUMN_NAME, r.getName());
                     recipe.put(RecipeContract.COLUMN_IMAGE, r.getImage());
                     recipe.put(RecipeContract.COLUMN_SERVINGS, r.getServings());
@@ -146,6 +170,7 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
                     recipe.put(RecipeContract.COLUMN_STEPS, gson.toJson(r.getSteps()));
                     recipe.put(RecipeContract.COLUMN_INGREDIENTS_SIZE, r.getIngredients().size());
                     recipe.put(RecipeContract.COLUMN_STEPS_SIZE, r.getSteps().size());
+                    recipe.put(RecipeContract.COLUMN_DESIRED, 0);
 
                     recipes[i] = recipe;
                 }
@@ -181,7 +206,6 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
     @Override
     public void onResume() {
         super.onResume();
-
 
         getActivity()
                 .getSupportLoaderManager()
