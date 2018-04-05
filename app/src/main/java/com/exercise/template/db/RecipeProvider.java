@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import net.simonvt.schematic.annotation.ContentProvider;
 import net.simonvt.schematic.annotation.ContentUri;
+import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
 /**
@@ -14,14 +15,45 @@ public final class RecipeProvider {
 
     public static final String AUTHORITY = "com.exercise.template.db.RecipeProvider";
 
+    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+
     @TableEndpoint(table = RecipeDb.RECIPES)
     public static class Recipes {
 
+        private static Uri buildUri(String... paths) {
+            Uri.Builder builder = BASE_CONTENT_URI.buildUpon();
+            for (String path : paths) {
+                builder.appendPath(path);
+            }
+            return builder.build();
+        }
+
         @ContentUri(
                 path = "recipes",
-                    type = "vnd.android.cursor.dir/recipes",
-                defaultSort = RecipeContract.COLUMN_NAME + " ASC"
+                type = "vnd.android.cursor.dir/recipes"
         )
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/recipes");
+        public static final Uri CONTENT_URI = buildUri("recipes");
+
+        @InexactContentUri(
+                path = "recipes" + "/id/#",
+                name = "recipe_id",
+                type = "vnd.android.cursor.item/recipes",
+                whereColumn = RecipeContract._ID,
+                pathSegment = 2
+        )
+        public static Uri CONTENT_URI_WITH_ID(String id){
+            return buildUri("recipes", "id", id);
+        }
+
+        @InexactContentUri(
+                path = "recipes" + "/desired/#",
+                name = "recipe_desired",
+                type = "vnd.android.cursor.item/recipes",
+                whereColumn = RecipeContract.COLUMN_DESIRED,
+                pathSegment = 2
+        )
+        public static Uri DESIRED_CONTENT_URI(int desired){
+            return buildUri("recipes", "desired", String.valueOf(desired));
+        }
     }
 }
