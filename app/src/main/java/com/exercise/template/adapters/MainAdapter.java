@@ -2,10 +2,13 @@ package com.exercise.template.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.exercise.template.R;
@@ -31,32 +34,19 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
 
-    private List<Recipe> data;
-
     private Cursor cursor;
 
     private RecipeListener recipeListener;
-
-    private boolean isUsingCursor;
 
     private Gson gson;
 
     public MainAdapter(Context context) {
         this.context = context;
-        data = new ArrayList<>();
-        isUsingCursor = false;
         gson = new Gson();
-    }
-
-    public void setData(List<Recipe> data){
-        this.data = data;
-        isUsingCursor = false;
-        notifyDataSetChanged();
     }
 
     public void setCursor(Cursor c){
         cursor = c;
-        isUsingCursor = true;
         notifyDataSetChanged();
     }
 
@@ -75,13 +65,8 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
 
-        if(isUsingCursor){
-            cursor.moveToPosition(position);
-            bindCursor(viewHolder);
-        }
-        else{
-            bindData(viewHolder, data.get(position));
-        }
+        cursor.moveToPosition(position);
+        bindCursor(viewHolder);
     }
 
     private void bindCursor(ViewHolder viewHolder){
@@ -90,6 +75,13 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         viewHolder.tvServing.setText(context.getString(R.string.small_info_serving, cursor.getInt(RecipeContract.COL_NUM_SERVINGS)));
         viewHolder.tvStep.setText(context.getString(R.string.small_info_step, cursor.getInt(RecipeContract.COL_NUM_STEPS_SIZE)));
 
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_favorite_border);
+        if(cursor.getInt(RecipeContract.COL_NUM_DESIRED) == 1){
+            drawable = ContextCompat.getDrawable(context, R.drawable.ic_favorite);
+        }
+
+        viewHolder.imgFavourite.setImageDrawable(
+                drawable);
     }
 
     private void bindData(ViewHolder viewHolder, Recipe recipe){
@@ -101,10 +93,13 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return isUsingCursor ? cursor.getCount() : data.size();
+        return cursor != null ? cursor.getCount() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        @BindView(R.id.iv_favourite)
+        ImageView imgFavourite;
 
         @BindView(R.id.tv_title)
         TextView tvTitle;
@@ -122,36 +117,43 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+            imgFavourite.setOnClickListener(this::onClick);
         }
 
         @Override
         public void onClick(View view) {
-            Recipe selectedRecipe;
-            if(isUsingCursor){
+            if(view.getId() == R.id.iv_favourite){
+                cursor.moveToPosition(getAdapterPosition());
+                recipeListener.onFavouriteClick(cursor.getString(RecipeContract.COL_NUM_RECIPE_ID));
+            }
+            else {
+                Recipe selectedRecipe;
+                cursor.moveToPosition(getAdapterPosition());
+
                 selectedRecipe = new Recipe();
-                selectedRecipe.setId(cursor.getString(RecipeContract.COL_NUM_ID));
+                selectedRecipe.setId(cursor.getString(RecipeContract.COL_NUM_RECIPE_ID));
                 selectedRecipe.setName(cursor.getString(RecipeContract.COL_NUM_NAME));
                 selectedRecipe.setServings(cursor.getInt(RecipeContract.COL_NUM_SERVINGS));
                 selectedRecipe.setImage(cursor.getString(RecipeContract.COL_NUM_IMAGE));
 
-                Type ingredientType = new TypeToken<List<Ingredient>>(){}.getType();
+                Type ingredientType = new TypeToken<List<Ingredient>>() {
+                }.getType();
                 List<Ingredient> dtIngredient = gson.fromJson(cursor.getString(RecipeContract.COL_NUM_INGREDIENTS), ingredientType);
 
-                Type stepType = new TypeToken<List<Step>>(){}.getType();
+                Type stepType = new TypeToken<List<Step>>() {
+                }.getType();
                 List<Step> dtStep = gson.fromJson(cursor.getString(RecipeContract.COL_NUM_STEPS), stepType);
 
                 selectedRecipe.setIngredients(dtIngredient);
                 selectedRecipe.setSteps(dtStep);
-            }
-            else{
-                selectedRecipe = data.get(getAdapterPosition());
-            }
 
-            recipeListener.onRecipeClick(selectedRecipe);
+                recipeListener.onRecipeClick(selectedRecipe);
+            }
         }
     }
 
     public interface RecipeListener{
         void onRecipeClick(Recipe selectedRecipe);
+        void onFavouriteClick(String recipeId);
     }
 }
