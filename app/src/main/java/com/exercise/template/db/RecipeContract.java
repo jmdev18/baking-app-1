@@ -17,6 +17,10 @@ public interface RecipeContract {
 
     @DataType(DataType.Type.TEXT)
     @NotNull
+    String COLUMN_RECIPE_ID = "recipe_id";
+
+    @DataType(DataType.Type.TEXT)
+    @NotNull
     String COLUMN_NAME = "name";
 
     @DataType(DataType.Type.INTEGER)
@@ -43,6 +47,10 @@ public interface RecipeContract {
     @NotNull
     String COLUMN_STEPS_SIZE = "steps_size";
 
+    @DataType(DataType.Type.INTEGER)
+    @NotNull
+    String COLUMN_DESIRED = "desired";
+
     String[] PROJECTION = {
         _ID,
         COLUMN_NAME,
@@ -52,6 +60,8 @@ public interface RecipeContract {
         COLUMN_INGREDIENTS_SIZE,
         COLUMN_STEPS_SIZE,
         COLUMN_IMAGE,
+        COLUMN_DESIRED,
+        COLUMN_RECIPE_ID
     };
 
     int COL_NUM_ID = 0;
@@ -62,4 +72,6 @@ public interface RecipeContract {
     int COL_NUM_INGREDIENTS_SIZE = 5;
     int COL_NUM_STEPS_SIZE = 6;
     int COL_NUM_IMAGE = 7;
+    int COL_NUM_DESIRED = 8;
+    int COL_NUM_RECIPE_ID = 9;
 }
