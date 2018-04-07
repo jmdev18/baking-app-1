@@ -9,6 +9,7 @@ import com.exercise.template.Constants;
 import com.exercise.template.R;
 import com.exercise.template.api.models.Recipe;
 import com.exercise.template.views.activities.detail.fragments.DetailFragment;
+import com.exercise.template.views.activities.detail.fragments.SlidingTheaterFragment;
 import com.exercise.template.views.activities.detail.fragments.TheaterFragment;
 import com.exercise.template.views.activities.detail.viewmodels.DetailViewModel;
 import com.exercise.template.views.base.BaseActivity;
@@ -37,7 +38,7 @@ public class DetailActivity extends BaseActivity {
 
     public void gotoTheater(){
         if(findViewById(R.id.container_detail) == null) {
-            addFragment(R.id.container_main, TheaterFragment.newInstance());
+            addFragment(R.id.container_main, SlidingTheaterFragment.newInstance());
         }
     }
 
