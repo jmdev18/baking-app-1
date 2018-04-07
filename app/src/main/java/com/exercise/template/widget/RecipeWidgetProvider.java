@@ -21,6 +21,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         // Update recipe title
         views.setTextViewText(R.id.tv_welcome, recipe);
+        views.setTextViewText(R.id.tv_empty, "");
 
         //update list view
         Intent intent = new Intent(context, RecipeWidgetRemoteViewsService.class);

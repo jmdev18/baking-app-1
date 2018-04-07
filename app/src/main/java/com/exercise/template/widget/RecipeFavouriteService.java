@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import com.exercise.template.R;
 import com.exercise.template.db.RecipeContract;
 import com.exercise.template.db.RecipeProvider;
 
@@ -53,11 +55,12 @@ public class RecipeFavouriteService extends IntentService {
                 );
 
         if(cursor != null && cursor.moveToFirst()) {
+            String recipeName = cursor.getString(RecipeContract.COL_NUM_NAME);
             RecipeWidgetProvider.updateRecipeWidget(
                     this,
                     appWidgetManager,
                     appWidgetIds,
-                    cursor.getString(RecipeContract.COL_NUM_NAME)
+                    recipeName
             );
 
             cursor.close();

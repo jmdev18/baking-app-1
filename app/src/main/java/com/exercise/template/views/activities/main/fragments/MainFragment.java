@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.exercise.template.R;
 import com.exercise.template.adapters.MainAdapter;
@@ -148,6 +149,8 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
                         null
                 );
 
+                Toast.makeText(getContext(), getString(R.string.favourite_recipe_message, recipeName), Toast.LENGTH_SHORT).show();
+
                 RecipeFavouriteService.startActionFavouriteRecipe(getContext());
             }
         });
@@ -231,8 +234,6 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        Timber.e("masuk %d", data.getCount());
         if(data.getCount() > 0) {
             adapter.setCursor(data);
         }

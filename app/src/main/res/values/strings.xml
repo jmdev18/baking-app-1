@@ -14,4 +14,6 @@
     <string name="error_caption">Oopss!</string>
     <string name="error_title">Something weird happened!</string>
     <string name="try_again">Try Again</string>
+    <string name="favourite_recipe_message">%1$s is your most favourite now!</string>
+    <string name="no_favourite_recipe_message">No Favourite Recipe</string>
 </resources>
