@@ -214,7 +214,7 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
 
         getActivity()
                 .getSupportLoaderManager()
-                .initLoader(LOADER_ID_RECIPES, null, this);
+                .restartLoader(LOADER_ID_RECIPES, null, this);
     }
 
     @Override
@@ -231,6 +231,8 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        Timber.e("masuk %d", data.getCount());
         if(data.getCount() > 0) {
             adapter.setCursor(data);
         }
