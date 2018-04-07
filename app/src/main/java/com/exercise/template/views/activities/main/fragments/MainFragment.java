@@ -27,10 +27,13 @@ import com.exercise.template.db.RecipeProvider;
 import com.exercise.template.views.activities.main.MainActivity;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseFragment;
+import com.exercise.template.widget.RecipeFavouriteService;
+import com.exercise.template.widget.RecipeWidgetProvider;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -126,7 +129,7 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
             }
 
             @Override
-            public void onFavouriteClick(String recipeId) {
+            public void onFavouriteClick(String recipeId, String recipeName) {
                 ContentValues values = new ContentValues();
                 values.put(RecipeContract.COLUMN_DESIRED, 0);
                 getActivity().getContentResolver().update(
@@ -144,6 +147,8 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
                         null,
                         null
                 );
+
+                RecipeFavouriteService.startActionFavouriteRecipe(getContext());
             }
         });
 

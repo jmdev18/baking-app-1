@@ -35,7 +35,7 @@ public final class RecipeProvider {
         public static final Uri CONTENT_URI = buildUri("recipes");
 
         @InexactContentUri(
-                path = "recipes" + "/id/#",
+                path = "recipes/id/#",
                 name = "recipe_id",
                 type = "vnd.android.cursor.item/recipes",
                 whereColumn = RecipeContract._ID,
@@ -46,14 +46,14 @@ public final class RecipeProvider {
         }
 
         @InexactContentUri(
-                path = "recipes" + "/desired/#",
+                path = "recipes/desired/#",
                 name = "recipe_desired",
                 type = "vnd.android.cursor.item/recipes",
                 whereColumn = RecipeContract.COLUMN_DESIRED,
                 pathSegment = 2
         )
-        public static Uri DESIRED_CONTENT_URI(int desired){
-            return buildUri("recipes", "desired", String.valueOf(desired));
+        public static Uri DESIRED_CONTENT_URI(){
+            return buildUri("recipes", "desired", "1");
         }
     }
 }

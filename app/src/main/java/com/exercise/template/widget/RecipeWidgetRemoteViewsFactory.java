@@ -9,8 +9,15 @@ import android.widget.RemoteViewsService;
 
 import com.exercise.template.Constants;
 import com.exercise.template.R;
+import com.exercise.template.api.models.Ingredient;
 import com.exercise.template.db.RecipeContract;
 import com.exercise.template.db.RecipeProvider;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * File Created by pandu on 03/04/18.
@@ -19,9 +26,13 @@ public class RecipeWidgetRemoteViewsFactory implements RemoteViewsService.Remote
 
     private Context context;
     private Cursor cursor;
+    private List<Ingredient> dtIngredients;
+    private Gson gson;
 
     public RecipeWidgetRemoteViewsFactory(Context context) {
         this.context = context;
+        gson = new Gson();
+        dtIngredients = new ArrayList<>();
     }
 
     @Override
@@ -35,14 +46,20 @@ public class RecipeWidgetRemoteViewsFactory implements RemoteViewsService.Remote
 
         long token = Binder.clearCallingIdentity();
         cursor = context.getContentResolver()
-                .query(RecipeProvider.Recipes.CONTENT_URI,
+                .query(RecipeProvider.Recipes.DESIRED_CONTENT_URI(),
                         RecipeContract.PROJECTION,
                         null,
                         null,
                         null
                 );
 
-        Binder.restoreCallingIdentity(token);
+        if (cursor != null && cursor.moveToFirst()) {
+            Type ingredientType = new TypeToken<List<Ingredient>>() {
+            }.getType();
+            dtIngredients = new ArrayList<>();
+            dtIngredients = gson.fromJson(cursor.getString(RecipeContract.COL_NUM_INGREDIENTS), ingredientType);
+            Binder.restoreCallingIdentity(token);
+        }
     }
 
     @Override
@@ -52,17 +69,17 @@ public class RecipeWidgetRemoteViewsFactory implements RemoteViewsService.Remote
 
     @Override
     public int getCount() {
-        return cursor != null ? cursor.getCount() : 0;
+        return dtIngredients.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
-        if(cursor == null || !cursor.moveToPosition(i)){
-            return null;
-        }
+        Ingredient ingredient = dtIngredients.get(i);
 
-        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.list_item_ingredient);
-        rv.setTextViewText(R.id.tv_title, cursor.getString(RecipeContract.COL_NUM_NAME));
+        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_list_item);
+        rv.setTextViewText(R.id.tv_title_widget,
+                context.getString(R.string.info_ingredient,
+                        ingredient.getIngredient(), ingredient.getQuantity(), ingredient.getMeasure()));
 
         return rv;
     }

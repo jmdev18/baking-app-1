@@ -124,7 +124,10 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void onClick(View view) {
             if(view.getId() == R.id.iv_favourite){
                 cursor.moveToPosition(getAdapterPosition());
-                recipeListener.onFavouriteClick(cursor.getString(RecipeContract.COL_NUM_RECIPE_ID));
+                recipeListener.onFavouriteClick(
+                        cursor.getString(RecipeContract.COL_NUM_RECIPE_ID),
+                        cursor.getString(RecipeContract.COL_NUM_NAME)
+                );
             }
             else {
                 Recipe selectedRecipe;
@@ -154,6 +157,6 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface RecipeListener{
         void onRecipeClick(Recipe selectedRecipe);
-        void onFavouriteClick(String recipeId);
+        void onFavouriteClick(String recipeId, String recipeName);
     }
 }
