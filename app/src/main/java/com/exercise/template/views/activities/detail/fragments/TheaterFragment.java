@@ -43,17 +43,24 @@ public class TheaterFragment extends BaseFragment {
     public static final String TAG = TheaterFragment.class.getSimpleName();
 
     DetailViewModel detailViewModel;
+
     @BindView(R.id.tv_desc)
     TextView tvDesc;
+
     Unbinder unbinder;
+
     @BindView(R.id.video_player)
     SimpleExoPlayerView videoPlayer;
+
     @BindView(R.id.tv_title)
     TextView tvTitle;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.video_player_empty)
     RelativeLayout videoPlayerEmpty;
+
     private SimpleExoPlayer simpleExoPlayer;
 
     public static TheaterFragment newInstance() {

@@ -71,7 +71,7 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         viewHolder.rootView.setOnClickListener(view -> {
             lastSelectedPosition = selectedPosition;
-            stepListener.onStepClick(data.get(position));
+            stepListener.onStepClick(data.get(position), position);
             selectedPosition = position;
 
             notifyItemChanged(lastSelectedPosition);
@@ -111,6 +111,6 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public interface StepListener {
-        void onStepClick(Step step);
+        void onStepClick(Step step, int pos);
     }
 }
