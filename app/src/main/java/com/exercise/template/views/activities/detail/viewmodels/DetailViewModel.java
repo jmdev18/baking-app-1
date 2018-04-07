@@ -19,6 +19,8 @@ public class DetailViewModel extends ViewModel {
 
     private MutableLiveData<Step> selectedStep = new MutableLiveData<>();
 
+    private MutableLiveData<Integer> selectedStepPos = new MutableLiveData<>();
+
     private MutableLiveData<Boolean> isTablet = new MutableLiveData<>();
 
     private CompositeDisposable disposables = new CompositeDisposable();
