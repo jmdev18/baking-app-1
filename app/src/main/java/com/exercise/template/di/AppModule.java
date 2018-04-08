@@ -19,4 +19,10 @@ public class AppModule {
     Context provideContext(Application application){
         return application;
     }
+
+    @Provides
+    @Singleton
+    String provideAppMode(){
+        return "NOT TEST";
+    }
 }
