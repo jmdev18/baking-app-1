@@ -8,7 +8,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.exercise.template.MockTestRunner"
     }
     buildTypes {
         release {
@@ -20,6 +20,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+android.applicationVariants.all {
+    def aptOutputDir = new File(buildDir, "generated/source/apt/${it.unitTestVariant.dirName}")
+    it.unitTestVariant.addJavaSourceFoldersToModel(aptOutputDir)
 }
 
 dependencies {
@@ -37,7 +42,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
 
     annotationProcessor "net.simonvt.schematic:schematic-compiler:$schematicVersion"
-    compile "net.simonvt.schematic:schematic:$schematicVersion"
+    implementation "net.simonvt.schematic:schematic:$schematicVersion"
 
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
@@ -61,12 +66,23 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    implementation "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
     testImplementation 'junit:junit:4.12'
+
+    androidTestImplementation "com.google.dagger:dagger:$daggerVersion"
+    androidTestImplementation "com.google.dagger:dagger-android:$daggerVersion"
+    androidTestImplementation "com.google.dagger:dagger-android-support:$daggerVersion"
+
+    androidTestAnnotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.2.0"
+    androidTestImplementation 'org.mockito:mockito-android:2.8.47'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 }
