@@ -8,15 +8,13 @@ import android.util.DisplayMetrics;
 import com.exercise.template.Constants;
 import com.exercise.template.R;
 import com.exercise.template.views.activities.detail.DetailActivity;
-import com.exercise.template.views.activities.detail.fragments.DetailFragment;
+import com.exercise.template.views.activities.main.fragments.MainFragment;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseActivity;
-import com.exercise.template.views.activities.main.fragments.MainFragment;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity {
 

@@ -106,7 +106,6 @@ public class DetailFragment extends BaseFragment {
                     detailViewModel.getSelectedStep().setValue(recipe.getSteps().get(0));
 
 
-                scrollView.fullScroll(ScrollView.FOCUS_UP);
             }
         });
 

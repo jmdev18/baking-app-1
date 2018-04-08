@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exercise.template.R;
@@ -29,12 +30,9 @@ import com.exercise.template.views.activities.main.MainActivity;
 import com.exercise.template.views.activities.main.viewmodels.MainViewModel;
 import com.exercise.template.views.base.BaseFragment;
 import com.exercise.template.widget.RecipeFavouriteService;
-import com.exercise.template.widget.RecipeWidgetProvider;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -51,14 +49,17 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
 
     public static final String TAG = MainFragment.class.getSimpleName();
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-
     @Inject
     MainAdapter adapter;
 
     @Inject
     MainViewModel.Factory mainViewModelFactory;
+
+    @Inject
+    String appMode;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -68,6 +69,9 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
 
     @BindView(R.id.rlError)
     RelativeLayout rlError;
+
+    @BindView(R.id.tv_test)
+    TextView tvTest;
 
     private MainViewModel mainViewModel;
 
@@ -96,6 +100,10 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Timber.e("masuk ke sini %s", appMode);
+
+        tvTest.setText(appMode);
+
         mainViewModel = ViewModelProviders.of(getActivity(), mainViewModelFactory)
                 .get(MainViewModel.class);
 
@@ -115,7 +123,7 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
         });
 
         mainViewModel.getNumberOfCols().observe(this, cols -> {
-            if(cols == null) cols = 1;
+            if (cols == null) cols = 1;
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), cols));
         });
 
@@ -158,7 +166,7 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
         recyclerView.setAdapter(adapter);
     }
 
-    private void insertRecipes(List<Recipe> data){
+    private void insertRecipes(List<Recipe> data) {
         @SuppressLint("StaticFieldLeak")
         AsyncTask<Void, Void, Void> insertRecipes = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -189,7 +197,18 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
             }
         };
 
-        insertRecipes.execute();
+
+        Cursor cursor = getActivity().getContentResolver()
+                .query(RecipeProvider.Recipes.CONTENT_URI,
+                        RecipeContract.PROJECTION,
+                        null,
+                        null,
+                        null
+                );
+
+        if (cursor != null && cursor.getCount() == 0) {
+            insertRecipes.execute();
+        }
     }
 
     public void showLoader() {
@@ -207,7 +226,7 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
     }
 
     @OnClick(R.id.btn_try_again)
-    public void tryAgain(){
+    public void tryAgain() {
         mainViewModel.fetchRecipes();
     }
 
@@ -234,10 +253,9 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(data.getCount() > 0) {
+        if (data.getCount() > 0) {
             adapter.setCursor(data);
-        }
-        else{
+        } else {
             mainViewModel.fetchRecipes();
         }
     }

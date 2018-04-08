@@ -13,73 +13,83 @@
         app:titleTextColor="@android:color/white"
         android:layout_height="?attr/actionBarSize"/>
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_below="@id/toolbar"
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:textStyle="bold"
-        tools:text="@string/title_placeholder"/>
-
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/video_player"
-        android:layout_below="@id/tv_title"
-        android:layout_width="match_parent"
-        android:padding="16dp"
-        android:layout_height="360dp"/>
-
-    <RelativeLayout
-        android:id="@+id/video_player_empty"
-        android:layout_below="@id/tv_title"
-        android:layout_width="match_parent"
-        android:padding="16dp"
-        android:layout_height="360dp"
-        android:visibility="invisible">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="18sp"
-            android:text="@string/no_vid"/>
-
-    </RelativeLayout>
-
-    <android.support.v7.widget.CardView
-        android:layout_below="@id/video_player_empty"
-        android:id="@+id/card_ingredient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorListItem"
-        app:contentPadding="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tv_desc_caption"
+                android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_desc"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:textStyle="bold"
+                tools:text="@string/title_placeholder"/>
 
-            <TextView
-                android:id="@+id/tv_desc"
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/video_player"
+                android:layout_below="@id/tv_title"
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:layout_height="360dp"/>
+
+            <RelativeLayout
+                android:id="@+id/video_player_empty"
+                android:layout_below="@id/tv_title"
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:layout_height="360dp"
+                android:visibility="invisible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textSize="18sp"
+                    android:text="@string/no_vid"/>
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.CardView
+                android:layout_below="@id/video_player_empty"
+                android:id="@+id/card_ingredient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/title_placeholder"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="8dp"
-                android:layout_below="@id/tv_desc_caption"/>
+                app:cardBackgroundColor="@color/colorListItem"
+                app:contentPadding="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_desc_caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_desc"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="@string/title_placeholder"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="8dp"
+                        android:layout_below="@id/tv_desc_caption"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
+    </ScrollView>
 </RelativeLayout>
