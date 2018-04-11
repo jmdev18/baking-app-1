@@ -70,9 +70,6 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
     @BindView(R.id.rlError)
     RelativeLayout rlError;
 
-    @BindView(R.id.tv_test)
-    TextView tvTest;
-
     private MainViewModel mainViewModel;
 
     Unbinder unbinder;
@@ -99,10 +96,6 @@ public class MainFragment extends BaseFragment implements LoaderManager.LoaderCa
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Timber.e("masuk ke sini %s", appMode);
-
-        tvTest.setText(appMode);
 
         mainViewModel = ViewModelProviders.of(getActivity(), mainViewModelFactory)
                 .get(MainViewModel.class);

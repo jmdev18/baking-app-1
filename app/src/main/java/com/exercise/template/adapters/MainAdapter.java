@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,6 +99,9 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+        @BindView(R.id.root_view)
+        CardView rootView;
+
         @BindView(R.id.iv_favourite)
         ImageView imgFavourite;
 
@@ -116,7 +120,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
+            rootView.setOnClickListener(this);
             imgFavourite.setOnClickListener(this::onClick);
         }
 

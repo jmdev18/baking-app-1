@@ -28,23 +28,23 @@ public class NetworkModule {
         return httpLoggingInterceptor;
     }
 
-    @Provides
-    @Singleton
-    public Cache providesCache(Context context){
-        Long maxSize = (long) (1024 * 10);
-        return new Cache(context.getCacheDir(), maxSize);
-    }
+//    @Provides
+//    @Singleton
+//    public Cache providesCache(Context context){
+//        Long maxSize = (long) (1024 * 10);
+//        return new Cache(context.getCacheDir(), maxSize);
+//    }
 
     @Provides
     @Singleton
-    public OkHttpClient providesOkHttpClient(HttpLoggingInterceptor interceptor, Cache cache){
+    public OkHttpClient providesOkHttpClient(HttpLoggingInterceptor interceptor){
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(interceptor);
         builder.connectTimeout(Constants.TIMEOUT_DURATION, TimeUnit.SECONDS);
         builder.readTimeout(Constants.TIMEOUT_DURATION, TimeUnit.SECONDS);
         builder.writeTimeout(Constants.TIMEOUT_DURATION, TimeUnit.SECONDS);
         builder.followRedirects(false);
-        builder.cache(cache);
+//        builder.cache(cache);
         return builder.build();
     }
 }

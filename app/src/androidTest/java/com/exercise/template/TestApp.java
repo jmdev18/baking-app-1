@@ -1,5 +1,7 @@
 package com.exercise.template;
 
+import com.exercise.template.di.DaggerTestAppComponent;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import timber.log.Timber;

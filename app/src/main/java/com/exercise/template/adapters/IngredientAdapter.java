@@ -15,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * File Created by pandu on 01/04/18.

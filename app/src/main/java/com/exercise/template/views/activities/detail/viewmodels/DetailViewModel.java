@@ -8,11 +8,16 @@ import com.exercise.template.api.models.Step;
 
 import io.reactivex.disposables.CompositeDisposable;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * File Created by pandu on 01/04/18.
  */
-@Data
+@Getter
+@Setter
+@ToString
 public class DetailViewModel extends ViewModel {
 
     private MutableLiveData<Recipe> recipe = new MutableLiveData<>();

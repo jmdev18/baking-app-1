@@ -2,6 +2,7 @@ package com.exercise.template;
 
 import com.exercise.template.di.ActivityBuilder;
 import com.exercise.template.di.AppModule;
+import com.exercise.template.di.NetworkModule;
 import com.exercise.template.di.RetrofitModule;
 
 import javax.inject.Singleton;

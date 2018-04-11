@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -25,10 +26,11 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    public Retrofit providesRetrofit(Gson gson){
+    public Retrofit providesRetrofit(Gson gson, OkHttpClient okHttpClient){
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         builder.addConverterFactory(GsonConverterFactory.create(gson));
+        builder.client(okHttpClient);
         builder.baseUrl("https://d17h27t6h515a5.cloudfront.net");
         return builder.build();
     }
