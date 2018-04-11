@@ -188,7 +188,7 @@ public class SlidingTheaterFragment extends BaseFragment {
                 simpleExoPlayer.prepare(mediaSource);
             }
             else{
-                videoPlayer.setVisibility(View.GONE);
+                videoPlayer.setVisibility(View.INVISIBLE);
                 emptyState.setVisibility(View.VISIBLE);
             }
 
