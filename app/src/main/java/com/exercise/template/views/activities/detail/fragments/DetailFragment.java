@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -94,7 +95,6 @@ public class DetailFragment extends BaseFragment {
                             .load(recipe.getImage())
                             .error(R.drawable.ic_cake)
                             .fit()
-                            .centerCrop()
                             .into(imgCake);
                 }
 
@@ -104,8 +104,6 @@ public class DetailFragment extends BaseFragment {
                 //SET DEFAULT
                 if (!recipe.getSteps().isEmpty())
                     detailViewModel.getSelectedStep().setValue(recipe.getSteps().get(0));
-
-
             }
         });
 

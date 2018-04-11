@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.exercise.template.R;
 import com.exercise.template.api.models.Step;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,20 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(!videoURL.isEmpty()) viewHolder.imgPlay.setVisibility(View.VISIBLE);
         else viewHolder.imgPlay.setVisibility(View.GONE);
 
+        String thumbnailURL = step.getThumbnailURL();
+        if(thumbnailURL != null && !thumbnailURL.isEmpty()){
+            Picasso.with(context)
+                    .load(thumbnailURL)
+                    .error(R.drawable.ic_cake)
+                    .fit()
+                    .centerCrop()
+                    .into(viewHolder.imgThumbnail);
+        }
+
+        else{
+            viewHolder.imgThumbnail.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_cake));
+        }
+
         viewHolder.rootView.setOnClickListener(view -> {
             lastSelectedPosition = selectedPosition;
             stepListener.onStepClick(data.get(position), position);
@@ -103,6 +118,9 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @BindView(R.id.img_play)
         ImageView imgPlay;
+
+        @BindView(R.id.img_thumbnail)
+        ImageView imgThumbnail;
 
         public ViewHolder(View itemView) {
             super(itemView);
