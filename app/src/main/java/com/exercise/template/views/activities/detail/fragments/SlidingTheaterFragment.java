@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -202,11 +205,12 @@ public class SlidingTheaterFragment extends BaseFragment {
                 ExtractorMediaSource.Factory factory = new ExtractorMediaSource.Factory(dataSourceFactory);
                 MediaSource mediaSource = factory.createMediaSource(uri, mainHandler, null);
 
-                simpleExoPlayer.setPlayWhenReady(false);
+                simpleExoPlayer.setPlayWhenReady(true);
                 simpleExoPlayer.prepare(mediaSource);
 
                 Long videoPos = detailViewModel.getVideoPosition().getValue();
                 simpleExoPlayer.seekTo(videoPos != null ? videoPos : 0);
+                detailViewModel.getVideoPosition().setValue(0L);
             }
             else{
                 videoPlayer.setVisibility(View.INVISIBLE);
