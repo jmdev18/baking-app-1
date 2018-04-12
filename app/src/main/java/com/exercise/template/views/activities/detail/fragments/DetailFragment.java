@@ -102,8 +102,13 @@ public class DetailFragment extends BaseFragment {
                 stepAdapter.setData(recipe.getSteps());
 
                 //SET DEFAULT
-                if (!recipe.getSteps().isEmpty())
-                    detailViewModel.getSelectedStep().setValue(recipe.getSteps().get(0));
+                if (!recipe.getSteps().isEmpty()) {
+                    Integer position = detailViewModel.getSelectedStepPos().getValue();
+                    if(position != null){
+                        stepAdapter.setSelectedPosition(position);
+                    }
+                    detailViewModel.getSelectedStep().setValue(position != null ? recipe.getSteps().get(position) : recipe.getSteps().get(0));
+                }
             }
         });
 

@@ -40,6 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.http.POST;
 import timber.log.Timber;
 
 /**
@@ -108,10 +109,31 @@ public class SlidingTheaterFragment extends BaseFragment {
                 viewPager.setCurrentItem(pos);
             }
         });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(detailViewModel.getRecipe().getValue() != null) {
+                    detailViewModel.getSelectedStep().setValue(detailViewModel.getRecipe().getValue().getSteps().get(0));
+                    detailViewModel.getSelectedStepPos().setValue(position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
     public void onPause() {
+        detailViewModel.getVideoPosition().setValue(simpleExoPlayer.getCurrentPosition());
         simpleExoPlayer.stop();
         simpleExoPlayer.release();
         simpleExoPlayer = null;
@@ -127,10 +149,6 @@ public class SlidingTheaterFragment extends BaseFragment {
     public class ViewPagerAdapter extends PagerAdapter{
 
         private List<Step> dtStep = new ArrayList<>();
-
-        public ViewPagerAdapter() {
-
-        }
 
         public void setData(List<Step> d){
             dtStep = new ArrayList<>();
@@ -186,6 +204,9 @@ public class SlidingTheaterFragment extends BaseFragment {
 
                 simpleExoPlayer.setPlayWhenReady(false);
                 simpleExoPlayer.prepare(mediaSource);
+
+                Long videoPos = detailViewModel.getVideoPosition().getValue();
+                simpleExoPlayer.seekTo(videoPos != null ? videoPos : 0);
             }
             else{
                 videoPlayer.setVisibility(View.INVISIBLE);

@@ -33,7 +33,8 @@ public class TestRetrofitModule {
         builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         builder.addConverterFactory(GsonConverterFactory.create(gson));
         builder.client(okHttpClient);
-        builder.baseUrl("http://localhost:" + String.valueOf(TestConstants.PORT));
+        builder.baseUrl("https://d17h27t6h515a5.cloudfront.net");
+//        builder.baseUrl("http://localhost:" + String.valueOf(TestConstants.PORT));
         return builder.build();
     }
 

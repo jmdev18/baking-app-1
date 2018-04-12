@@ -45,6 +45,20 @@ public class BaseActivity extends AppCompatActivity implements HasSupportFragmen
         }
     }
 
+    protected final void replaceFragment(@IdRes int containerViewId, Fragment fragment) {
+        Fragment f = getSupportFragmentManager().findFragmentByTag(fragment.getClass().getSimpleName());
+
+        if(f == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
+                            R.anim.slide_in_right, R.anim.slide_out_right)
+                    .replace(containerViewId, fragment, fragment.getClass().getSimpleName())
+                    .addToBackStack(fragment.getClass().getSimpleName())
+                    .commit();
+        }
+    }
+
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return fragmentInjector;

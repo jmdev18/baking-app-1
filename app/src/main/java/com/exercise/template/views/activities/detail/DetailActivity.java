@@ -1,5 +1,6 @@
 package com.exercise.template.views.activities.detail;
 
+import android.app.FragmentManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import com.exercise.template.views.activities.detail.fragments.SlidingTheaterFra
 import com.exercise.template.views.activities.detail.fragments.TheaterFragment;
 import com.exercise.template.views.activities.detail.viewmodels.DetailViewModel;
 import com.exercise.template.views.base.BaseActivity;
+
+import timber.log.Timber;
 
 public class DetailActivity extends BaseActivity {
 
@@ -29,10 +32,22 @@ public class DetailActivity extends BaseActivity {
         detailViewModel.getRecipe().setValue((Recipe) getIntent().getSerializableExtra(Constants.INTENT_RECIPE_DETAIL));
         detailViewModel.getIsTablet().setValue(isTablet);
 
-        addFragment(R.id.container_main, DetailFragment.newInstance());
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
 
-        if(findViewById(R.id.container_detail) != null){
+        if(isTablet){
+            if(backStackEntryCount == 2) getSupportFragmentManager().popBackStackImmediate();
+            addFragment(R.id.container_main, DetailFragment.newInstance());
             addFragment(R.id.container_detail, TheaterFragment.newInstance());
+        }
+        else {
+            if(findViewById(R.id.v_tablet) != null) {
+                if (backStackEntryCount == 2) {
+                    getSupportFragmentManager().popBackStackImmediate();
+                    addFragment(R.id.container_main, TheaterFragment.newInstance());
+                }
+                else addFragment(R.id.container_main, DetailFragment.newInstance());
+            }
+            else addFragment(R.id.container_main, DetailFragment.newInstance());
         }
     }
 

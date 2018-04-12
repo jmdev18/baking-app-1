@@ -34,6 +34,7 @@ import com.google.android.exoplayer2.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * File Created by pandu on 01/04/18.
@@ -124,8 +125,10 @@ public class TheaterFragment extends BaseFragment {
                     ExtractorMediaSource.Factory factory = new ExtractorMediaSource.Factory(dataSourceFactory);
                     MediaSource mediaSource = factory.createMediaSource(uri, mainHandler, null);
 
+                    Long videoPos = detailViewModel.getVideoPosition().getValue();
                     simpleExoPlayer.setPlayWhenReady(true);
                     simpleExoPlayer.prepare(mediaSource);
+                    simpleExoPlayer.seekTo(videoPos != null ? videoPos : 0);
                 }
                 else{
                     videoPlayer.setVisibility(View.GONE);
@@ -137,6 +140,7 @@ public class TheaterFragment extends BaseFragment {
 
     @Override
     public void onPause() {
+        detailViewModel.getVideoPosition().setValue(simpleExoPlayer.getCurrentPosition());
         simpleExoPlayer.stop();
         simpleExoPlayer.release();
         simpleExoPlayer = null;

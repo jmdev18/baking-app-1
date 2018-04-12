@@ -24,6 +24,8 @@ public class DetailViewModel extends ViewModel {
 
     private MutableLiveData<Step> selectedStep = new MutableLiveData<>();
 
+    private MutableLiveData<Long> videoPosition = new MutableLiveData<>();
+
     private MutableLiveData<Integer> selectedStepPos = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> isTablet = new MutableLiveData<>();

@@ -45,6 +45,11 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void setSelectedPosition(int position){
+        selectedPosition = position;
+        notifyItemChanged(selectedPosition);
+    }
+
     public void setStepListener(StepListener listener){
         this.stepListener = listener;
     }
@@ -85,12 +90,10 @@ public class StepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         viewHolder.rootView.setOnClickListener(view -> {
-            lastSelectedPosition = selectedPosition;
             stepListener.onStepClick(data.get(position), position);
-            selectedPosition = position;
-
+            lastSelectedPosition = selectedPosition;
             notifyItemChanged(lastSelectedPosition);
-            notifyItemChanged(selectedPosition);
+            setSelectedPosition(position);
         });
 
         if(selectedPosition == position){
