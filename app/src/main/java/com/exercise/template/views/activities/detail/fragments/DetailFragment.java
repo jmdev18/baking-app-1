@@ -115,6 +115,7 @@ public class DetailFragment extends BaseFragment {
         stepAdapter.setStepListener((step, pos) -> {
             detailViewModel.getSelectedStep().setValue(step);
             detailViewModel.getSelectedStepPos().setValue(pos);
+            detailViewModel.getVideoPosition().setValue(0L);
             ((DetailActivity) getActivity()).gotoTheater();
         });
 

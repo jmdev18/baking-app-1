@@ -64,6 +64,7 @@ public class DetailActivity extends BaseActivity {
             finish();
         }
         else{
+            detailViewModel.getVideoPosition().setValue(0L);
             super.onBackPressed();
         }
     }
