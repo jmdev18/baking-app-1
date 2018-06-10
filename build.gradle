@@ -20,7 +20,7 @@ ext{
     okHttpVersion       = "3.9.1"
     rxJava2Version      = "2.1.9"
     rxAndroidVersion    = "2.0.2"
-    supportVersion      = "27.0.2"
+    supportVersion      = "27.1.0"
     daggerVersion       = "2.14.1"
     picassoVersion      = "2.5.2"
     lombokVersion       = "1.16.20"
