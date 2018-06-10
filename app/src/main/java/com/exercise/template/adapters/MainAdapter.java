@@ -66,23 +66,25 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
 
-        cursor.moveToPosition(position);
+        if(!cursor.isClosed())cursor.moveToPosition(position);
         bindCursor(viewHolder);
     }
 
     private void bindCursor(ViewHolder viewHolder){
-        viewHolder.tvTitle.setText(cursor.getString(RecipeContract.COL_NUM_NAME));
-        viewHolder.tvIngredient.setText(context.getString(R.string.small_info_ingredient, cursor.getInt(RecipeContract.COL_NUM_INGREDIENTS_SIZE)));
-        viewHolder.tvServing.setText(context.getString(R.string.small_info_serving, cursor.getInt(RecipeContract.COL_NUM_SERVINGS)));
-        viewHolder.tvStep.setText(context.getString(R.string.small_info_step, cursor.getInt(RecipeContract.COL_NUM_STEPS_SIZE)));
+        if(cursor != null && !cursor.isClosed()) {
+            viewHolder.tvTitle.setText(cursor.getString(RecipeContract.COL_NUM_NAME));
+            viewHolder.tvIngredient.setText(context.getString(R.string.small_info_ingredient, cursor.getInt(RecipeContract.COL_NUM_INGREDIENTS_SIZE)));
+            viewHolder.tvServing.setText(context.getString(R.string.small_info_serving, cursor.getInt(RecipeContract.COL_NUM_SERVINGS)));
+            viewHolder.tvStep.setText(context.getString(R.string.small_info_step, cursor.getInt(RecipeContract.COL_NUM_STEPS_SIZE)));
 
-        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_favorite_border);
-        if(cursor.getInt(RecipeContract.COL_NUM_DESIRED) == 1){
-            drawable = ContextCompat.getDrawable(context, R.drawable.ic_favorite);
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_favorite_border);
+            if (cursor.getInt(RecipeContract.COL_NUM_DESIRED) == 1) {
+                drawable = ContextCompat.getDrawable(context, R.drawable.ic_favorite);
+            }
+
+            viewHolder.imgFavourite.setImageDrawable(
+                    drawable);
         }
-
-        viewHolder.imgFavourite.setImageDrawable(
-                drawable);
     }
 
     private void bindData(ViewHolder viewHolder, Recipe recipe){
